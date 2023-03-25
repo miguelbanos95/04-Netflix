@@ -2,12 +2,12 @@ import React from 'react'
 
 export function ListOfMovies ({ movies }) {
   return (
-    <ul>
+    <ul className='movies'>
       {
         movies.map(movie => (
-          <li key={movie.id}>
-            <h1>{movie.title}</h1>
-            <h3>{movie.year}</h3>
+          <li className='movie' key={movie.id}>
+            <h3>{movie.title}</h3>
+            <h4>{movie.year}</h4>
             <img src={movie.poster} alt={movie.title} />
           </li>
         ))

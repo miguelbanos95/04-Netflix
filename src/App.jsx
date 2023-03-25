@@ -1,19 +1,22 @@
 import './App.css'
-import { useRef } from 'react'
 import { Movies } from './components/Movies'
 import { useMovies } from './hooks/useMovies'
+import { useSearch } from './hooks/useSearch'
 
 function App () {
-  const { movies: mappedMovies } = useMovies()
-  const inputRef = useRef()
+  const { search, setSearch, errors } = useSearch()
+  const { movies, getMovies, loading } = useMovies({ search })
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    const inputValue = inputRef.current.value
     /* otra manera:
     const inputEl = inputRef.current ==> registra la referencia del elemento
     const value = inputEl.value ==> recupera el valor del imputEl */
-    console.log(inputValue)
+    getMovies()
+  }
+  const handleOnChange = (event) => {
+    const newSearch = event.target.value
+    setSearch(newSearch)
   }
 
   return (
@@ -21,12 +24,24 @@ function App () {
       <header>
         <h1>Buscador de Películas</h1>
         <form className='form' onSubmit={handleSubmit}>
-          <input ref={inputRef} placeholder='Batman, Iron Man, Matrix... ' />
+          <input
+            placeholder='Batman, Iron Man, Matrix... '
+            name='search'
+            onChange={handleOnChange}
+            value={search}
+            style={{
+              border: '1px solid transparent',
+              borderColor: errors ? 'red' : 'transparent'
+            }}
+          />
           <button type='submit'>Buscar</button>
         </form>
+        {errors && <p style={{ color: 'red' }}>{errors}</p>}
       </header>
       <main>
-        <Movies movies={mappedMovies} />
+        {loading
+          ? <p>Cargando...</p>
+          : <Movies movies={movies} />}
       </main>
     </div>
   )
